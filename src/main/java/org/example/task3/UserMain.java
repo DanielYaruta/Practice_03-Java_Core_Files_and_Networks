@@ -7,60 +7,61 @@ import java.util.Scanner;
 public class UserMain {
 
     public static void main(String[] args) {
-        Path filePath = Path.of("users.txt");
-        UserManager manager = UserManager.load(filePath);
-
-        System.out.println("=== Загруженные пользователи ===");
-        if (manager.getUsers().isEmpty()) {
-            System.out.println("Список пуст.");
-        } else {
-            manager.getUsers().forEach(System.out::println);
-        }
-
-        System.out.println("\n=== Добавление новых пользователей ===");
-        System.out.println("Введите 'exit' в поле имени, чтобы выйти.\n");
-
+        UserManager manager = UserManager.load(Path.of("users.txt"));
         Scanner scanner = new Scanner(System.in);
+
         while (true) {
-            String name = readValidField(scanner, "Имя");
-            if (name == null) break;
+            System.out.println("\nВыберите действие:");
+            System.out.println("1 - Добавить пользователя");
+            System.out.println("2 - Показать список пользователей");
+            System.out.println("3 - Выход");
 
-            String city = readValidField(scanner, "Город");
-            if (city == null) break;
+            String choice = scanner.nextLine().trim();
 
-            try {
-                User user = new User(name, city);
-                manager.addUser(user);
-                System.out.println("Сохранено: " + user + "\n");
-            } catch (UserValidationException e) {
-                System.out.println("[Ошибка валидации] " + e.getMessage() + "\n");
-            } catch (IOException e) {
-                System.out.println("[Ошибка файла] " + e.getMessage() + "\n");
+            switch (choice) {
+                case "1" -> addUser(scanner, manager);
+                case "2" -> showUsers(manager);
+                case "3" -> {
+                    System.out.println("Выход из программы.");
+                    return;
+                }
+                default -> System.out.println("Некорректный выбор. Введите 1, 2 или 3.");
             }
-        }
-
-        System.out.println("\n=== Итоговый список ===");
-        if (manager.getUsers().isEmpty()) {
-            System.out.println("Список пуст.");
-        } else {
-            manager.getUsers().forEach(System.out::println);
         }
     }
 
-    private static String readValidField(Scanner scanner, String label) {
+    private static void addUser(Scanner scanner, UserManager manager) {
+        String name = readValidField(scanner, "Введите имя пользователя");
+        String city = readValidField(scanner, "Введите город пользователя");
+        try {
+            manager.addUser(new User(name, city));
+            System.out.println("Пользователь сохранён.");
+        } catch (UserValidationException e) {
+            System.out.println("Ошибка валидации: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Ошибка файла: " + e.getMessage());
+        }
+    }
+
+    private static void showUsers(UserManager manager) {
+        if (manager.getUsers().isEmpty()) {
+            System.out.println("Список пуст.");
+        } else {
+            System.out.println("Список пользователей:");
+            manager.getUsers().forEach(u ->
+                System.out.println("Имя: " + u.getName() + ", Город: " + u.getCity()));
+        }
+    }
+
+    private static String readValidField(Scanner scanner, String prompt) {
         while (true) {
-            System.out.print(label + ": ");
+            System.out.print(prompt + ": ");
             String value = scanner.nextLine().trim();
-
-            if (value.equalsIgnoreCase("exit")) {
-                return null;
-            }
-
             try {
-                UserValidator.validateField(label, value);
+                UserValidator.validateField(prompt, value);
                 return value;
             } catch (UserValidationException e) {
-                System.out.println("[Ошибка] " + e.getMessage() + ". Попробуйте снова.");
+                System.out.println("Ошибка: " + e.getMessage() + ". Попробуйте снова.");
             }
         }
     }
