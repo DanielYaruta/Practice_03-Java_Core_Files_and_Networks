@@ -1,6 +1,8 @@
-# Practice 03 — Многопоточность и работа с файлами на Java
+# Многопоточность и работа с файлами на Java
 
-Три практических задачи на многопоточность, синхронизацию и NIO.
+![Java](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-3.6+-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+![JUnit](https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white)
 
 ## Задачи
 
@@ -58,19 +60,6 @@ User{name='Алиса', city='Москва'}
 Сохранено: User{name='Борис', city='Киев'}
 ```
 
-## Технологии
-
-| Технология | Применение |
-|---|---|
-| `synchronized` / `wait` / `notifyAll` | синхронизация в Задаче 1 |
-| `AtomicInteger` | lock-free счётчики в Задаче 2 |
-| `ExecutorService` / `invokeAll` | управление пулом потоков |
-| `ThreadLocalRandom` | генерация без конкуренции потоков |
-| `java.nio.file.Files` | чтение и запись файла |
-| `FileChannel` + `FileLock` | атомарная запись с межпроцессной блокировкой |
-| `java.util.logging` | логирование в бизнес-логике |
-| JUnit 5 | 82 теста: юнит, интеграционные, параметризованные |
-
 ## Структура проекта
 
 ```
@@ -104,21 +93,3 @@ src/
         ├── UserValidatorTest.java
         └── UserManagerTest.java
 ```
-
-## Сборка и запуск
-
-```bash
-# собрать и запустить все тесты
-mvn test
-
-# запустить задачу 1 (кафе, 30 сек)
-mvn compile exec:java -Dexec.mainClass=org.example.task1.CafeMain
-
-# запустить задачу 2 (числа)
-mvn compile exec:java -Dexec.mainClass=org.example.task2.NumberMain
-
-# запустить задачу 3 (пользователи, интерактивно)
-mvn compile exec:java -Dexec.mainClass=org.example.task3.UserMain
-```
-
-**Требования:** JDK 17+, Maven 3.6+
