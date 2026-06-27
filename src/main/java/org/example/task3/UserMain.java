@@ -31,8 +31,8 @@ public class UserMain {
     }
 
     private static void addUser(Scanner scanner, UserManager manager) {
-        String name = readValidField(scanner, "Введите имя пользователя");
-        String city = readValidField(scanner, "Введите город пользователя");
+        String name = readValidField(scanner, "Введите имя пользователя", "Имя");
+        String city = readValidField(scanner, "Введите город пользователя", "Город");
         try {
             manager.addUser(new User(name, city));
             System.out.println("Пользователь сохранён.");
@@ -53,12 +53,12 @@ public class UserMain {
         }
     }
 
-    private static String readValidField(Scanner scanner, String prompt) {
+    private static String readValidField(Scanner scanner, String prompt, String label) {
         while (true) {
             System.out.print(prompt + ": ");
             String value = scanner.nextLine().trim();
             try {
-                UserValidator.validateField(prompt, value);
+                UserValidator.validateField(label, value);
                 return value;
             } catch (UserValidationException e) {
                 System.out.println("Ошибка: " + e.getMessage() + ". Попробуйте снова.");
